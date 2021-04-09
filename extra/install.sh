@@ -287,10 +287,18 @@ clone_repo() {
 }
 
 download(){
-  echo "${DECORATION}"
   sleep ${NORMAL}
   echo ${BS} "${BLUE}Download binaries...${RESET}"
   sleep ${LARGE}
+  if [ -f "geckodriver" ]; then
+    echo ${BS} "${GREEN}Firefox driver found. Skipping this step"
+    EXTRA="${EXTRA} geckodriver"
+    return 0
+  elif [ -d "chromedriver" ]; then
+    echo ${BS} "${GREEN}Chromium driver found. Skipping this step"
+    EXTRA="${EXTRA} geckodriver"
+    return 0
+  fi
 
   echo ${BS} "${CYAN}Select your favourite browser"
   sleep ${NORMAL}
@@ -311,12 +319,43 @@ download(){
   if install_packages "${EXTRA}"; then return 0; else exit_info; return 1; fi
 }
 
+install(){
+  echo "${DECORATION}"
+  sleep ${NORMAL}
+  echo ${BS} "${BLUE}Installing...${RESET}"
+  sleep ${LARGE}
+
+  if [ -f "${DEFAULT_PATH}/geckodriver" ]; then
+    echo ${BS} "${GREEN}Firefox driver found in ${DEFAULT_PATH}. Skipping this step"
+    return 0
+  elif [ -f "${DEFAULT_PATH}/chromedriver" ]; then
+    echo ${BS} "${GREEN}Firefox driver found in ${DEFAULT_PATH}. Skipping this step"
+    return 0
+  fi
+
+  if download; then
+    for FILE in ${EXTRA}; do
+      sudo "mv" "${FILE}" "${DEFAULT_PATH}"
+    done
+  else
+    return 1
+  fi
+
+  echo ${BS} "${CYAN}Installing script."
+  if sudo "ln" "-srf" "${REPO_NAME}/dtool.py" "${DEFAULT_PATH}"; then
+    echo ${BS} "${GREEN}Script installed, run ${RESET}${BOLD}automated-dtool${RESET}${GREEN} command"
+    return 0
+  else
+    exit_info
+    return 1
+  fi
+}
+
 decoration
 init_all
 
 if ! check_packages; then exit; fi
 if ! install_modules; then exit; fi
 if ! clone_repo; then exit; fi
-if ! download; then exit; fi
+if ! install; then exit; fi
 success
-
