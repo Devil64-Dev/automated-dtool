@@ -3,6 +3,7 @@
 # author: Devil64-Dev
 # This script is only for ArchLinux and Debian based systems.
 
+
 decoration() {
   LENGTH=$(($(tput cols) - 1))
   DECORATION="-"
@@ -41,6 +42,9 @@ init_all() {
   NL="\n"
   CI="\ci"
 
+  # info
+  echo ${BS} "${BLUE}        Automated Download Tool - Install Script${RESET}"
+
   # PROGRAM VARIABLES
   # install paths and file names
   DEFAULT_PATH="/usr/bin"
@@ -61,7 +65,7 @@ init_all() {
 }
 
 exit_info() {
-  echo ${BS} "${YELLOW}${NL}For more help visit: ${ITALIC}${UNDERLINE}${REPO}/docs/manual_installation.es.md${RESET}"
+  echo ${BS} "${YELLOW}For more help visit: ${ITALIC}${UNDERLINE}${REPO}/docs/manual_installation.es.md${RESET}"
   sleep ${NORMAL}
   echo ${BS} "${NL}${RED}${BOLD}ERROR: ${RESET}${RED}Needed packages can't be found or installed. Exiting...${RESET}"
 }
