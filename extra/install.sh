@@ -49,7 +49,7 @@ init_all() {
   # install paths and file names
   DEFAULT_PATH="/usr/bin"
   NEEDED_PACKAGES="git python3 pip3 ffmpeg"
-  PYTHON_MODULES="requests lxml selenium pycryptodome"
+  PYTHON_MODULES="requests lxml selenium pycryptodome scrapy scrapy-selenium"
   EXTRA_URL="https://raw.githubusercontent.com/Devil64-Dev/automated-dtool/extras/"
   # package manager
   PM_LIST="pacman apt-get"
