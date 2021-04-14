@@ -5,3 +5,4 @@ geckodriver.log
 utils/__pycache__/*
 page*
 pages/*
+*_pycache_*
