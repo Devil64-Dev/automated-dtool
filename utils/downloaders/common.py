@@ -6,7 +6,7 @@ from time import sleep
 from typing import get_origin
 from utils.dialogs import Logger
 
-class ResourceHandler:
+class ResourceDownloader:
     
     def __init__(self, settings, logger, path, data):
         """
