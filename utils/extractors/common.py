@@ -12,7 +12,6 @@ class ResourceExtractor:
         extractor = False
         # validate URLs
         if PlatziExtractor.validate(self.url):
-            self.logger.success(f"{self.url} is a valid Platzi URL")
             if isinstance(self.page_source, str):
                 extractor = PlatziExtractor(self.logger, self.page_source)
             else:

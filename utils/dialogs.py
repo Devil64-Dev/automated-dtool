@@ -80,6 +80,61 @@ class Logger:
         print(message, end=end)
         sleep(log_time)
         self.__log_level = ''
+        self.line = Logger.line
+
+    def cancel(self, msg, start='', level='INFO'):
+        """
+        Create a Cancel/Exit dialog, this should be used,
+        while program is running task
+
+        :param msg: Dialog message
+        :param start: ''
+        :param level: Give colored output based on level 'INFO', 'WARNING', 'ERROR'
+        
+        """
+        keys = "([y]/n)? "
+        msg = f"{start}{self.COLORS[level]}{msg} {keys}{self.RESET}"
+        try:
+            result = input(msg)
+            if result in ('y', '', 'Y'):
+                return True
+            else:
+                return False
+            
+        except (KeyboardInterrupt, EOFError):
+            return True
+
+    def ask_user(self, msg, start='', level='INFO', keys='([y]/n)? '):
+        """
+        Create a Cancel/Exit dialog, this should be used,
+        while program is running task
+
+        :param msg: Dialog message
+        :param start: ''
+        :param level: Give colored output based on level 'INFO', 'WARNING', 'ERROR'
+        
+        """
+        keys = keys
+        msg = f"{start}{self.COLORS[level]}{msg} {keys}{self.RESET}"
+        try:
+            result = input(msg)
+            if result in ('y', '', 'Y'):
+                return True
+            else:
+                return False
+            
+        except (KeyboardInterrupt, EOFError):
+            return True
+
+    def write_log(self, file_name, data, fmode='a', time=True):
+        with open(file_name, fmode) as f:
+            try:
+                for log_line in data:
+                    if time:
+                        log_line = self.__get_time + ' - ' + log_line
+                    f.writelines(log_line + '\n')
+            except (ValueError, TypeError):
+                f.write(f"{self.__get_time} - Log error: Data error, 1unknown data")
 
     @property
     def __get_time(self):

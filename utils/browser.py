@@ -23,52 +23,57 @@ class BrowserManager:
             self.logger.info("Launching browser.", end='\r')
             driver = webdriver.Firefox(options=self.options)
             self.browser = driver
-            self.logger.success("Browser launched.")
+            self.logger.info("Browser launched.")
         except AttributeError:
             self.logger.info("Launching browser.", end='\r')
             driver = webdriver.Firefox(options=self.options)
             self.browser = driver
-            self.logger.success("Browser launched.")
+            self.logger.info("Browser launched.")
 
     def get(self, url):
         try:
-            sleep(self.settings.load_await)
-            self.browser.get(url)
-            if self.javascript:
-                sleep(self.settings.js_await)
+            try:
+                sleep(self.settings.load_await)
+                self.browser.get(url)
+                if self.javascript:
+                    sleep(self.settings.js_await)
 
-            return True
-        except TimeoutException:
-            self.logger.error(self.settings.messages[3])
-            sleep(self.settings.connection_timeout_retry)
-            self.get(url)
+                return True
 
-        except ErrorInResponseException:
-            self.logger.error(self.settings.messages[2])
-            sleep(self.settings.connection_timeout_retry)
-            self.get(url)
+            except TimeoutException:
+                self.logger.error(self.settings.messages[3])
+                sleep(self.settings.connection_timeout_retry)
+                self.get(url)
 
-        except WebDriverException:
-            self.logger.error(self.settings.messages[4])
-            self.quit()
+            except ErrorInResponseException:
+                self.logger.error(self.settings.messages[2])
+                sleep(self.settings.connection_timeout_retry)
+                self.get(url)
 
-        return False
+            except WebDriverException:
+                self.logger.error(self.settings.messages[4])
+                return False
+
+        except KeyboardInterrupt:
+            result = self.logger.cancel(f"Cancel loading URL: {url}")
+            if result:
+                return False
+            else:
+                self.get(url)
 
     @property
     def page_source(self):
-        try:
-            return str(self.browser.page_source)
-        except AttributeError:
-            self.logger.warning(self.settings.messages[1])
-            return "<html></html>"
-        except WebDriverException:
-            self.logger.error(self.settings.messages[4])
-            return "<html></html>"
+        result = self.browser.page_source
+        if result is not None:
+            return str(result)
+        else:
+            return "<html><head></head><body></body></html>"
 
     def quit(self):
         self.logger.info(self.settings.messages[8])
         try:
             self.browser.quit()
+            return True
         except AttributeError:
             self.logger.warning(self.settings.messages[1])
             return True
@@ -76,43 +81,52 @@ class BrowserManager:
             self.logger.error(self.settings.messages[5])
             self.browser.quit()
             return False
-
-        self.browser.quit()
-        return True
+        except ConnectionRefusedError:
+            return True
 
     def get_cookies(self):
         try:
             return self.browser.get_cookies()
         except AttributeError:
             self.logger.warning(self.settings.messages[1])
+            return []
         except WebDriverException:
             self.logger.error(self.settings.messages[4])
-        finally:
-            return self.browser.get_cookies()
+            return []
 
     def add_cookies(self, cookies, domain_url):
 
-        self.get(domain_url)
-        if isinstance(cookies, list):
-            for cookie in cookies:
-                try:
-                    if 'name' in cookie:
-                        self.logger.info(f"Restoring cookie: {cookie['name']}", end='\r')
-                    else:
-                        self.logger.info("Restoring cookie: name_not_available", end='\r')
-                    self.browser.add_cookie(cookie)
-                except AttributeError:
-                    self.logger.warning(self.settings.messages[1])
-                    return False
-                except InvalidCookieDomainException:
-                    self.logger.error(self.settings.messages[7])
-                    self.logger.error(self.settings.messages[9])
-                    return False
+        self.logger.info("Starting the restoration of cookies")
+        if not self.get(domain_url):
+            return False
+        if isinstance(cookies, list) and len(cookies) > 2:
+            try:
+                for cookie in cookies:
+                    try:
+                        if 'name' in cookie:
+                            self.logger.info(f"Restoring cookie: {cookie['name']}", end='\r')
+                        else:
+                            self.logger.info("Restoring cookie: name_not_available", end='\r')
+                        self.browser.add_cookie(cookie)
+                    except AttributeError:
+                        self.logger.warning(self.settings.messages[1])
+                        return False
+                    except InvalidCookieDomainException:
+                        self.logger.error(self.settings.messages[7])
+                        self.logger.error(self.settings.messages[9])
+                        return False
 
-                except WebDriverException:
-                    self.logger.error(self.settings.messages[4])
-                    self.quit()
-                    return False
+                    except WebDriverException:
+                        self.logger.error(self.settings.messages[4])
+                        self.quit()
+                        return False
+            except KeyboardInterrupt:
+                self.logger.error('Keyboard interrupt received, ending program...')
+                self.quit()
+                return False
 
-            self.logger.success("Cookies restored.")
+            self.logger.info("Cookies restored.", start='\n')
             return True
+        else:
+            self.logger.warning("No cookies to restore.")
+            return False

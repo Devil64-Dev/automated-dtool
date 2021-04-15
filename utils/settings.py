@@ -19,6 +19,43 @@ class GeneralSetting:
     }
     process_sleep = 1
     large_output_sleep = 0.4
+    download_wait = 5
+
+    # extractor
+    # if True, section1 lessons{1, 2, 3}, section2 lessons{1, 2, 3}
+    # if False, section1 lessons{1, 2, 3}, section2 lessons{4, 5, 6}
+    global_numeration = True  
+
+
+    WGET_EXIT_STATUS = {
+        0: {'status': True, 'retry': False, 'message': ''},
+        1: {'status': False, 'retry': False, 'message': "Generic error code"},
+        2: {'status': False, 'retry': False, 'message': "Parse error—for instance, when parsing \
+            command-line options, the ‘.wgetrc’ or ‘.netrc’..."},
+        3: {'status': False, 'retry': False, 'message': "Error writing/reading file"},
+        4: {'status': False, 'retry': True, 'message': "Network failure"},
+        5: {'status': False, 'retry': True, 'message': "SSL verification failure"},
+        6: {'status': False, 'retry': False, 'message': "Username/password authentication failure."},
+        7: {'status': False, 'retry': False, 'message': "Server issued an error response"},
+        8: {'status': False, 'retry': False, 'message': "Protocols error"},
+        130: {'status': False, 'retry': False, 'message': "User"}
+
+    }
+
+    EXTENSIONS = ['.mp4', '.ts', '.webm', '.mkv', '.html']
+
+     # All know characters that no are valid for strings
+    CHAR_EXCHANGE = [{'bad': 'ó', 'good': 'o'}, {'bad': 'á', 'good': 'a'},
+                  {'bad': 'é', 'good': 'e'}, {'bad': 'í', 'good': 'i'},
+                  {'bad': 'ú', 'good': 'u'}, {'bad': ':', 'good': ' -'},
+                  {'bad': '/', 'good': '__'}, {'bad': '¿', 'good': ''},
+                  {'bad': 'Á', 'good': 'A'}, {'bad': 'É', 'good': 'E'},
+                  {'bad': 'Í', 'good': 'I'}, {'bad': 'Ó', 'good': 'O'},
+                  {'bad': 'Ú', 'good': 'U'}, {'bad': 'à', 'good': 'a'},
+                  {'bad': 'è', 'good': 'e'}, {'bad': 'ì', 'good': 'i'},
+                  {'bad': 'ù', 'good': 'ù'}, {'bad': 'À', 'good': 'A'},
+                  {'bad': 'È', 'good': 'E'}, {'bad': 'Ì', 'good': 'I'},
+                  {'bad': 'Ù', 'good': 'Ù'}, {'bad': '`', 'good': ''}]
 
 
 class BrowserSettings(GeneralSetting):
@@ -27,7 +64,7 @@ class BrowserSettings(GeneralSetting):
         self.js_await = 10
         self.session_check_time = 10
         self.mode_change_time = 10
-        self.cookies_path = '/'.join(os.path.abspath(parent).split('/')[:-1]) + '/.cache'
+        self.cookies_path = '/'.join(parent.split('/')[:-1]) + '/.cache'
         self.connection_timeout_retry = 20
         self.messages = {
             1: "Browser is not active or initialized.",  # AttributeError
