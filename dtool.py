@@ -17,7 +17,7 @@ except IndexError:
 
 
 try:
-    os.mkdir(os.path.abspath(__file__)[:-1])
+    os.mkdir(os.path.abspath(__file__)[:-1] + '/.cache')
 except FileExistsError:
     pass
 
