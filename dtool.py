@@ -41,10 +41,11 @@ session_manager = SessionManager(
 
 browser = BrowserManager(logger, settings, headless=True)
 browser.call_browser()
-if not isinstance(session_manager.start_session(browser), bool):
-    browser.quit()
-    logger.error("Error starting session. Exiting...")
-    raise SystemExit()
+session_manager.start_session(browser)
+# if not isinstance(, bool):
+#     browser.quit()
+#     logger.error("Error starting session. Exiting...")
+#     raise SystemExit()
 
 data = DataExtractor(settings, logger, url=url, browser=browser)
 data = data.process_data()
