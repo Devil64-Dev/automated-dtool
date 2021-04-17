@@ -45,13 +45,13 @@ class BrowserManager:
                 sleep(self.settings.connection_timeout_retry)
                 self.get(url)
 
-            except ErrorInResponseException:
-                self.logger.error(self.settings.messages[2])
+            except ErrorInResponseException as err:
+                self.logger.error(self.settings.messages[2] + f'Info: {err}')
                 sleep(self.settings.connection_timeout_retry)
                 self.get(url)
 
-            except WebDriverException:
-                self.logger.error(self.settings.messages[4])
+            except WebDriverException as err:
+                self.logger.error(self.settings.messages[4] + f'Info: {err}')
                 return False
 
         except KeyboardInterrupt:

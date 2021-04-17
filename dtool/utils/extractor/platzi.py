@@ -376,7 +376,7 @@ class DataExtractor:
                 self.logger.info("The URL will be take as (Single course) URL.")
             except AttributeError:
                 self.logger.info("The URL will be taken as (Route) URL.")
-            if not self.browser.get(self.url):
+            if self.browser.get(self.url):
                 # check
                 try:
                     re.search("<title>.*?>", self.browser.page_source).group()
