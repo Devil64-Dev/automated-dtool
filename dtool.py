@@ -32,9 +32,10 @@ settings = BrowserSettings(os.path.abspath(__file__))
 logger = Logger(settings)
 
 try:
-    if not os.path.exists(os.path.abspath(__file__).split('/')[:-1] + '/.cache'):
+    cache_path = "/"
+    if not os.path.exists("/".join(os.path.abspath(__file__).split('/')[:-1]) + '/.cache'):
         logger.info("Creating cache folder...")
-        os.mkdir(os.path.abspath(__file__).split('/')[:-1] + '/.cache')
+        os.mkdir(("/".join(os.path.abspath(__file__).split('/')[:-1]) + '/.cache'))
 except FileExistsError:
     pass
 
