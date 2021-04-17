@@ -27,16 +27,15 @@ class ResourceDownloader:
                     # download archives
                     if self._file_download_handler(resource_value['download'], overwrite=overwrite):
                         self.logger.success("Download complete successfully")
-                        return True
                     else:
                         self.logger.warning("Some files could not be downloaded")
                 else:
                     if self._write_data(resource_value):
                         self.logger.success("Extra resources saved.")
-                        return True
                     else:
                         self.logger.warning("Unable to save extra resources")
-                        return True
+
+            return True
         
         else:
             self.logger.warning("No resources found to save/download.")
@@ -55,7 +54,7 @@ class ResourceDownloader:
         is_retry = False
         parent_path = os.getcwd()
         download_path = os.path.abspath(full_path)
-        self.logger.task("Downloading lesson files.")
+        self.logger.task("Downloading lesson files.", start='\n')
         for download_item in items:
             name = download_item['name']
             full_name = full_path + name

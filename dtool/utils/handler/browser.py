@@ -34,6 +34,7 @@ class BrowserManager:
         try:
             try:
                 sleep(self.settings.load_await)
+                self.logger.info(f"Loading URL: {url}")
                 self.browser.get(url)
                 if self.javascript:
                     sleep(self.settings.js_await)
@@ -67,6 +68,7 @@ class BrowserManager:
         if result is not None:
             return str(result)
         else:
+            self.logger.warning("Webpage content is not valid")
             return "<html><head></head><body></body></html>"
 
     def quit(self):

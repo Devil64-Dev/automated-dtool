@@ -190,7 +190,7 @@ class PlatziExtractor:
         :return:
         """
 
-        self.logger.task("Searching for lesson resources.")
+        self.logger.task("Searching for lesson resources.", start='\n')
         element = '//div[@class="Resources"]'
 
         try:

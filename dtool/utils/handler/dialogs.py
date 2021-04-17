@@ -114,7 +114,6 @@ class Logger:
         :param level: Give colored output based on level 'INFO', 'WARNING', 'ERROR'
         
         """
-        keys = keys
         msg = f"{start}{self.COLORS[level]}{msg} {keys}{self.RESET}"
         try:
             result = input(msg)
