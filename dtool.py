@@ -15,13 +15,6 @@ try:
 except IndexError:
     raise SystemExit("Usage: automated-dtool https://example.com")
 
-
-try:
-    os.mkdir(os.path.abspath(__file__)[:-1] + '/.cache')
-except FileExistsError:
-    pass
-
-
 def extract(path, page_source):
     extractor = PlatziExtractor(logger, page_source)
     data = extractor.get_data()
@@ -33,6 +26,12 @@ def extract(path, page_source):
 
 settings = BrowserSettings(os.path.abspath(__file__))
 logger = Logger(settings)
+
+try:
+    logger.info("Creating cache folder...")
+    os.mkdir(os.path.abspath(__file__)[:-1] + '/.cache')
+except FileExistsError:
+    pass
 
 session_manager = SessionManager(
     settings, 'platzi', logger=logger, site_url="https://platzi.com",
