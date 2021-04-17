@@ -1,4 +1,4 @@
-#!usr/bin/python3
+#!/usr/bin/python3
 
 import os
 import sys
@@ -34,7 +34,7 @@ logger = Logger(settings)
 try:
     if not os.path.exists(os.path.abspath(__file__)[:-1] + '/.cache'):
         logger.info("Creating cache folder...")
-        os.mkdir(os.path.abspath(__file__)[:-1] + '/.cache')
+        os.mkdir(os.path.abspath(__file__).spli('/')[:-1] + '/.cache')
 except FileExistsError:
     pass
 
