@@ -77,6 +77,7 @@ if data['is_course']:
                 if isinstance(resources, dict):
                     downloader = ResourceDownloader(settings, logger, path, resources)
                     downloader.process_data()
+                    downloader.webpage_download(f"{lesson['name'][:3]} - webpage.html", browser, lesson['url',], overwrite=True)
                 else:
                     continue
 else:
