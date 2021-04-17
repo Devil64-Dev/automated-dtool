@@ -68,7 +68,7 @@ if data['is_course']:
             if lesson['type'] == 'video':
                 path = f"{data['name']}/{section['name']}/"
                 path += f"{lesson['name'][:3]} - extra_files"
-                if browser.get(lesson['url']):
+                if not browser.get(lesson['url']):
                     logger.warning("Unable to load lesson page. Skipping...")
                     continue
                 resources = extract(path=path, page_source=browser.page_source)
