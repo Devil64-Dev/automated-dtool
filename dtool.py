@@ -1,3 +1,5 @@
+#!usr/bin/python3
+
 import os
 import sys
 from dtool.utils.extractor.platzi import (
@@ -19,7 +21,7 @@ def extract(path, page_source):
     extractor = PlatziExtractor(logger, page_source)
     data = extractor.get_data()
     if not isinstance(data, dict):
-        exit()
+        pass
     
     return data
 
@@ -75,7 +77,8 @@ if data['is_course']:
                 if isinstance(resources, dict):
                     downloader = ResourceDownloader(settings, logger, path, resources)
                     downloader.process_data()
-
+                else:
+                    continue
 else:
     route = data['route_data'] # courses
     for course in route:
