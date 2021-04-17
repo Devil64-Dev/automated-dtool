@@ -82,6 +82,7 @@ if data['is_course']:
                     
                 path += f"/{section['name']}/"
                 path += f"{lesson['name'][:3]} - extra_files"
+                # wait time for load page
                 settings.load_await = (random.randint(settings.load_await, settings.load_await + 10))
                 if not browser.get(lesson['url']):
                     logger.warning("Unable to load lesson page. Skipping...")
@@ -103,6 +104,8 @@ else:
         logger.log(f"    URL: {course['url']}")
         for section in course['data']: # course section
             for lesson in section['items']: # section lessons
+                # wait time for load page
+                settings.load_await = (random.randint(settings.load_await, settings.load_await + 10))
                 os.system("clear")
                 logger.log(f"      Section: {section['name']}")
                 logger.log(f"        Name: {lesson['name']}")
